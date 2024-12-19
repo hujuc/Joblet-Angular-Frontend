@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-banusers',
@@ -14,7 +15,7 @@ import {FormsModule} from '@angular/forms';
   ]
 })
 export class BanusersComponent {
-  private usersUrl = 'http://127.0.0.1:8000/api/users';
+  private usersUrl = `${environment.apiUrl}/users`;
   users: any[] = [];
   loading = true;
   error = '';

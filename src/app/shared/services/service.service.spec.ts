@@ -5,12 +5,13 @@ import { Service } from 'app/shared/models/service.model';
 import { Provider } from 'app/shared/models/provider.model';
 import { Category } from 'app/shared/models/category.model';
 import { CategoryService } from 'app/shared/services/category.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceService {
-  private apiUrl = 'http://127.0.0.1:8000/api/services';
+  private apiUrl = `${environment.apiUrl}/services`;
 
   constructor(
     private http: HttpClient,

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {NgForOf, NgIf} from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-categories',
@@ -14,8 +15,8 @@ import {NgForOf, NgIf} from '@angular/common';
   styleUrl: './categories.component.css'
 })
 export class CategoriesComponent {
-  private categoriesUrl = 'http://127.0.0.1:8000/api/categories/';
-  private categoriesAddUrl = 'http://127.0.0.1:8000/api/categories/add/';
+  private categoriesUrl = `${environment.apiUrl}/categories/`;
+  private categoriesAddUrl = `${environment.apiUrl}/categories/add/`;
   categories: any[] = [];
 
   private token = localStorage.getItem('accessToken');
