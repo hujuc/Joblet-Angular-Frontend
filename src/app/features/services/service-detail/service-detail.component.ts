@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Service} from 'app/shared/models/service.model';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {ServiceService} from 'app/shared/services/service.service';
+import {AuthService} from 'app/shared/services/auth.service';
 import {DatePipe, DecimalPipe, NgForOf, NgIf, SlicePipe, UpperCasePipe} from '@angular/common';
 import {BookServiceComponent} from 'app/features/services/service-detail/book-service/book-service.component';
 import {environment} from 'environments/environment';
@@ -31,22 +32,28 @@ export class ServiceDetailComponent implements OnInit {
   avgRating: number | undefined;
   reviewsCount: number | undefined;
   relatedServices: Service[] = [];
-
-  get isBookable(): boolean {
-    return true;
-  }
+  isLoggedIn = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private serviceService: ServiceService
-  ) {}
+    private serviceService: ServiceService,
+    private authService: AuthService,
+  ) {
+    this.authService.getAuthStatus().subscribe((status) => {
+      this.isLoggedIn = status;
+    });
+  }
 
   ngOnInit(): void {
     const serviceId = this.route.snapshot.paramMap.get('id');
     if (serviceId) {
       this.fetchServiceDetails(+serviceId);
     }
+  }
+
+  get isBookable(): boolean {
+    return this.isLoggedIn || false;
   }
 
   fetchServiceDetails(id: number): void {

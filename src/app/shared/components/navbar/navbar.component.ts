@@ -21,13 +21,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   categories: Category[] = [];
   isLoggedIn = false;
   isAdmin = false;
-  showProfileDropdown = false;
   isProvider = false;
   hideNavbar = false;
   profile: Profile | null = null;
   unreadNotificationsCount = 0;
+  showProfileDropdown = false;
 
-  private authSubscription: Subscription | undefined;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private authService: AuthService,
@@ -37,24 +37,43 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  ngOnInit() {
-    // Subscribe to authentication state changes
-    this.authSubscription = this.authService.isAuthenticated().subscribe((status) => {
-      this.isLoggedIn = status;
-      this.isAdmin = this.authService.isAdmin();
-    });
-
-    // Hide navbar on specific routes
-    this.router.events.subscribe(() => {
-      this.hideNavbar = this.router.url.includes('/login') || this.router.url.includes('/register');
-    });
-
+  ngOnInit(): void {
+    this.handleAuthenticationChanges();
+    this.handleRouteChanges();
     this.fetchCategories();
-    this.fetchUserInfoAndCheckProvider();
     this.fetchUnreadNotificationsCount();
   }
 
-  fetchCategories() {
+  // Handle authentication state changes
+  private handleAuthenticationChanges(): void {
+    const authSub = this.authService.getAuthStatus().subscribe((isLoggedIn) => {
+      this.isLoggedIn = isLoggedIn;
+      if (isLoggedIn) {
+        this.fetchUserInfoAndCheckProvider();
+      } else {
+        this.resetUserState();
+      }
+    });
+    this.subscriptions.add(authSub);
+  }
+
+  // Reset user-related state on logout or unauthenticated state
+  private resetUserState(): void {
+    this.profile = null;
+    this.isAdmin = false;
+    this.isProvider = false;
+  }
+
+  // Handle hiding the navbar on specific routes
+  private handleRouteChanges(): void {
+    const routeSub = this.router.events.subscribe(() => {
+      this.hideNavbar = this.router.url.includes('/login') || this.router.url.includes('/register');
+    });
+    this.subscriptions.add(routeSub);
+  }
+
+  // Fetch categories for the navbar
+  private fetchCategories(): void {
     this.categoryService.getCategories().subscribe({
       next: (data: Category[]) => {
         this.categories = data;
@@ -65,36 +84,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleProfileDropdown() {
-    this.showProfileDropdown = !this.showProfileDropdown;
-  }
-
-  closeProfileDropdown() {
-    this.showProfileDropdown = false;
-  }
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  fetchUserInfoAndCheckProvider() {
+  // Fetch user info and determine provider/admin status
+  private fetchUserInfoAndCheckProvider(): void {
     this.authService.getMyProfile().subscribe({
-      next: (data) => {
-        this.profile = data;
+      next: (profile) => {
+        this.profile = profile;
         this.checkProvider(this.profile);
       },
       error: () => {
-        this.profile = null;
+        this.resetUserState();
       },
     });
   }
 
-  checkProvider(profile: Profile | null = null): boolean {
+  private checkProvider(profile: Profile | null): void {
     if (profile) {
       this.profileService.checkProvider(profile.user.id).subscribe({
-        next: (status) => {
-          this.isProvider = status;
+        next: (isProvider) => {
+          this.isProvider = isProvider;
         },
         error: (err) => {
           console.error('Error checking provider status:', err);
@@ -102,23 +109,37 @@ export class NavbarComponent implements OnInit, OnDestroy {
         },
       });
     }
-    return this.isProvider;
   }
 
-
-  fetchUnreadNotificationsCount(): void {
+  // Fetch unread notification count
+  private fetchUnreadNotificationsCount(): void {
     this.notificationService.getUnreadCount().subscribe({
       next: (count) => {
         this.unreadNotificationsCount = count;
-        console.log('Unread notifications count:', this.unreadNotificationsCount);
       },
       error: (err) => console.error('Error fetching unread notifications count:', err),
     });
   }
 
+  // Logout user
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 
-  ngOnDestroy() {
-    this.authSubscription?.unsubscribe();
+  // Toggle profile dropdown visibility
+  toggleProfileDropdown(): void {
+    this.showProfileDropdown = !this.showProfileDropdown;
+  }
+
+  // Close profile dropdown
+  closeProfileDropdown(): void {
+    this.showProfileDropdown = false;
+  }
+
+  // Clean up subscriptions on component destruction
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   protected readonly environment = environment;
