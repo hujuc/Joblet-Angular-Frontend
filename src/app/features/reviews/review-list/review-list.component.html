@@ -1,0 +1,16 @@
+<div *ngIf="isLoading" class="text-center">Loading reviews...</div>
+
+<div *ngIf="!isLoading && reviews.length > 0" class="space-y-4">
+  <div *ngFor="let review of reviews" class="bg-white p-4 rounded-lg shadow-md">
+    <div class="flex items-center justify-between">
+      <span class="font-semibold">{{ review.reviewer.user.username }}</span>
+      <span class="text-yellow-500 font-semibold">{{ review.rating }}/5</span>
+    </div>
+    <p>{{ review.comment }}</p>
+    <small class="text-gray-500">{{ review.created_at | date: 'MMM d, y' }}</small>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && reviews.length === 0" class="text-gray-500">
+  No reviews yet.
+</div>

@@ -1,0 +1,125 @@
+<nav *ngIf="!hideNavbar" class="navbar bg-primary rounded-xl">
+  <div class="container mx-auto">
+    <div class="navbar-start flex items-center gap-4">
+      <a class="ml-4 font-bold text-3xl text-white" routerLink="/home" aria-label="Home">joblet.</a>
+      <ul class="menu menu-horizontal px-1 text-white text-lg">
+        <li>
+          <details>
+            <summary class="rounded-full">Services</summary>
+            <ul class="bg-primary  px-2 z-10 shadow-xl w-52 relative z-20">
+              <li>
+                <a routerLink="/services" class="block pl-4 font-semibold hover:bg-secondary rounded-lg">
+                  All Services
+                </a>
+              </li>
+              <li class="py-2 text-base-300 text-sm font-semibold uppercase tracking-wide">
+                Categories
+              </li>
+              <li *ngFor="let category of categories | slice: 0:5">
+                <a [routerLink]="['/services', category.id]" class="block px-2 py-2 hover:bg-secondary rounded-lg flex gap-4">
+                  <ng-container *ngIf="category.icon; else defaultIcon">
+                    <i [class]="category.icon"></i>
+                  </ng-container>
+                  <ng-template #defaultIcon>
+                    <i class="fas fa-tag"></i>
+                  </ng-template>
+                  {{ category.name }}
+                </a>
+              </li>
+              <li *ngIf="!categories || categories.length === 0">
+                <p class="block px-4 py-2 text-gray-500">No categories available</p>
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li *ngIf="isAdmin"><a routerLink="pendingservices" class="rounded-full">Pending Services</a></li>
+        <li *ngIf="isAdmin"><a routerLink="users" class="rounded-full">Users</a></li>
+        <li *ngIf="isAdmin"><a routerLink="categories" class="rounded-full">Categories</a></li>
+        <li *ngIf="isLoggedIn && !isAdmin"><a routerLink="/myorders" aria-label="My Orders" class="rounded-full">My Orders</a></li>
+        <li *ngIf="isProvider"><a routerLink="myservices" aria-label="My Services" class="rounded-full">My Services</a></li>
+        <li><a routerLink="/providers" aria-label="Providers" class="rounded-full">Providers</a></li>
+      </ul>
+    </div>
+    <div class="navbar-end flex gap-4">
+      <ul class="menu menu-horizontal px-1 text-white text-lg">
+        <!-- Wallet Button -->
+        <a *ngIf="isLoggedIn && profile" [routerLink]="['/wallet']" class="btn btn-ghost btn-circle relative" aria-label="Wallet">
+          <i class="fas fa-wallet text-2xl text-white"></i>
+        </a>
+
+        <!-- Chats Button -->
+        <a *ngIf="isLoggedIn && profile" [routerLink]="['/mychats']" class="btn btn-ghost btn-circle relative" aria-label="Chats">
+          <i class="fas fa-message text-2xl text-white"></i>
+        </a>
+
+        <!-- Notifications Button -->
+        <a *ngIf="isLoggedIn && profile"
+          [routerLink]="['/notifications']"
+          class="btn btn-ghost btn-circle relative"
+          aria-label="Notifications"
+        >
+          <i class="fas fa-bell text-2xl text-white"></i>
+          <span
+            *ngIf="unreadNotificationsCount > 0"
+            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full"
+          >
+            {{ unreadNotificationsCount }}
+          </span>
+        </a>
+
+        <li *ngIf="!isLoggedIn"><a class="btn btn-ghost rounded-full text-white mr-2" routerLink="/login" aria-label="Login">Login</a></li>
+        <li *ngIf="!isLoggedIn"><a class="btn btn-light rounded-full text-primary" routerLink="/register" aria-label="Register">Register</a></li>
+
+        <!-- Profile Section -->
+        <div class="flex items-center gap-4 ml-4">
+          <span *ngIf="isLoggedIn && profile" class="text-white mr-2">Welcome, {{ profile.user.username }}</span>
+        </div>
+
+        <div *ngIf="isAdmin" class="btn btn-ghost rounded-full text-white" (click)="logout()">Logout</div>
+
+        <div *ngIf="isLoggedIn && profile" class="relative" id="profile-dropdown">
+
+          <!-- Profile Button -->
+          <button
+            tabindex="0"
+            id="profile-btn"
+            class="btn btn-circle bg-gray-300 text-black"
+            (click)="toggleProfileDropdown()"
+          >
+            <img
+              *ngIf="profile && profile.avatar"
+              [src]="environment.mediaUrl + profile.avatar"
+              class="rounded-full w-full h-full object-cover"
+              [alt]="profile.user.username"
+            />
+            <span *ngIf="profile && !profile.avatar" class="text-lg font-semibold">
+          {{ profile.user.username | slice:0:1 | uppercase }}
+        </span>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <ul
+            *ngIf="showProfileDropdown"
+            tabindex="0"
+            id="profile-menu"
+            class="dropdowndoprofile menu menu-sm dropdown-content bg-white rounded-box z-30 mt-3 w-52 p-2 shadow border-4 border-primary absolute right-0"
+          >
+            <li *ngIf="!isProvider">
+              <a routerLink="/becameaprovider" class="justify-between text-black">Become a Provider</a>
+            </li>
+            <li>
+              <a [routerLink]="['/profile', profile.user.username]" class="justify-between text-black">Profile</a>
+            </li>
+            <li>
+              <a (click)="logout()" class="justify-between text-black" aria-label="Logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+

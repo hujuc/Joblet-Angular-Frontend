@@ -1,0 +1,79 @@
+<div class="container mx-auto p-6">
+  <h2 class="text-2xl font-bold mt-4">My Active Chats</h2>
+  <p *ngIf="isProvider" class="text-gray-500">Accept a booking to start a chat.</p>
+  <p *ngIf="!isProvider" class="text-gray-500">Book a service and have it accepted to start a chat.</p>
+
+  <div *ngIf="isLoading" class="text-center my-6">
+    <p>Loading chats...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="grid grid-cols-1 gap-4 mt-6">
+    <div *ngIf="customerChats.length === 0 && providerChats.length === 0">
+      <p class="text-gray-500">You have no active chats.</p>
+    </div>
+
+    <div *ngIf="customerChats.length > 0">
+      <h3 class="text-xl font-semibold mb-2">Chats as a Customer</h3>
+      <ul class="bg-base-200 rounded-lg p-4 shadow-md">
+        <li *ngFor="let chat of customerChats" class="mb-3">
+          <div
+            (click)="viewChat(chat.id)"
+            class="flex justify-between items-center hover:bg-base-300 p-2 rounded-lg cursor-pointer"
+          >
+            <div>
+              <p class="font-semibold">{{ chat.booking.service.title || 'Service' }}</p>
+              <div class="flex items-center gap-2">
+                <img
+                  *ngIf="chat.booking.service.provider.profile.avatar"
+                  [src]="chat.booking.service.provider.profile.avatar"
+                  [alt]="chat.booking.service.provider.profile.user.username"
+                  class="w-8 h-8 rounded-full"
+                />
+                <span
+                  *ngIf="!chat.booking.service.provider.profile.avatar"
+                  class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white"
+                >
+                  {{ chat.booking.service.provider.profile.user.username | slice:0:1 | uppercase }}
+                </span>
+                <p class="text-sm">{{ chat.booking.service.provider.profile.user.username }}</p>
+              </div>
+            </div>
+            <span class="text-sm text-gray-400">{{ chat.created_at | date: 'MMM d, y HH:mm' }}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="providerChats.length > 0">
+      <h3 class="text-xl font-semibold mb-2">Chats as a Provider</h3>
+      <ul class="bg-base-200 rounded-lg p-4 shadow-md">
+        <li *ngFor="let chat of providerChats" class="mb-3">
+          <div
+            (click)="viewChat(chat.id)"
+            class="flex justify-between items-center hover:bg-base-300 p-2 rounded-lg cursor-pointer"
+          >
+            <div>
+              <p class="font-semibold">{{ chat.booking.service.title || 'Service' }}</p>
+              <div class="flex items-center gap-2">
+                <img
+                  *ngIf="chat.booking.customer.avatar"
+                  [src]="chat.booking.customer.avatar"
+                  [alt]="chat.booking.customer.user.username"
+                  class="w-8 h-8 rounded-full"
+                />
+                <span
+                  *ngIf="!chat.booking.customer.avatar"
+                  class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white"
+                >
+                  {{ chat.booking.customer.user.username | slice:0:1 | uppercase }}
+                </span>
+                <p class="text-sm">{{ chat.booking.customer.user.username }}</p>
+              </div>
+            </div>
+            <span class="text-sm text-gray-400">{{ chat.created_at | date: 'MMM d, y HH:mm' }}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

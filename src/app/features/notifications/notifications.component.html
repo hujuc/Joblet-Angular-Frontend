@@ -1,0 +1,45 @@
+<div class="p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold">Notifications</h2>
+    <button
+      *ngIf="hasUnreadNotifications()"
+      (click)="markAllAsRead()"
+      class="btn btn-sm btn-secondary text-white"
+    >
+      Mark All as Read
+    </button>
+  </div>
+
+  <ul *ngIf="notifications.length > 0; else noNotifications">
+    <li
+      *ngFor="let notification of notifications"
+      class="p-4 bg-white shadow-md rounded-lg mb-4 flex justify-between items-center"
+      [class.bg-gray-200]="!notification.read"
+    >
+      <div>
+        <p class="font-medium">{{ notification.message }}</p>
+        <p class="text-xs text-gray-500">
+          {{ notification.created_at | date: 'short' }}
+        </p>
+        <a
+          *ngIf="notification.url"
+          [href]="notification.url"
+          class="text-blue-500 underline text-sm"
+        >
+          View Details
+        </a>
+      </div>
+      <button
+        *ngIf="!notification.read"
+        (click)="markAsRead(notification.id)"
+        class="btn btn-sm btn-primary text-white"
+      >
+        Mark as Read
+      </button>
+    </li>
+  </ul>
+
+  <ng-template #noNotifications>
+    <p class="text-center text-gray-500">No notifications to display.</p>
+  </ng-template>
+</div>

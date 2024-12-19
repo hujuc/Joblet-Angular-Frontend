@@ -1,0 +1,113 @@
+<div class="container mx-auto my-10 px-4">
+  <header class="hero bg-secondary rounded-lg text-white pt-2 pb-2">
+    <div class="hero-content text-center">
+      <div class="max-w-lg">
+        <h1 class="text-5xl font-bold">Welcome to Joblet</h1>
+        <p class="py-6">Find the best professionals for your projects with ease and confidence.</p>
+        <a routerLink="/services" class="btn btn-base mt-2">Explore Services</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10">
+    <section class="bg-base-100 shadow-xl rounded-lg p-6">
+      <h2 class="text-3xl font-bold text-center mb-6">Top Providers</h2>
+      <div class="flex justify-center items-end space-x-8">
+        <div *ngIf="topProviders[1]" class="flex flex-col items-center">
+          <a [routerLink]="['/profile', topProviders[1].profile.user.username]">
+            <div class="avatar placeholder">
+              <div class="bg-neutral text-white w-24 h-24 rounded-full flex items-center justify-center">
+                <img *ngIf="topProviders[1].profile.avatar" [src]="environment.mediaUrl + topProviders[1].profile.avatar" alt="Avatar">
+                <span *ngIf="!topProviders[1].profile.avatar" class="text-3xl font-bold">
+              {{ topProviders[1].profile.user.username | slice:0:1 | uppercase }}
+            </span>
+              </div>
+            </div>
+          </a>
+          <h3 class="text-lg font-semibold mt-2">{{ topProviders[1].profile.user.username }}</h3>
+          <p class="text-sm text-gray-500">{{ topProviders[1].profile.location || 'Unknown Location' }}</p>
+          <div class="bg-secondary w-20 h-32 rounded-t-lg mt-4"></div>
+          <p class="mt-2 text-gray-500">2nd Place</p>
+        </div>
+
+        <div *ngIf="topProviders[0]" class="flex flex-col items-center">
+          <a [routerLink]="['/profile', topProviders[0].profile.user.username]">
+            <div class="avatar placeholder">
+              <div class="bg-neutral text-white w-24 h-24 rounded-full flex items-center justify-center">
+                <img *ngIf="topProviders[0].profile.avatar" [src]="environment.mediaUrl + topProviders[0].profile.avatar" alt="Avatar">
+                <span *ngIf="!topProviders[0].profile.avatar" class="text-3xl font-bold">
+              {{ topProviders[0].profile.user.username | slice:0:1 | uppercase }}
+            </span>
+              </div>
+            </div>
+          </a>
+          <h3 class="text-xl font-bold mt-2">{{ topProviders[0].profile.user.username }}</h3>
+          <p class="text-sm text-gray-500">{{ topProviders[0].profile.location || 'Unknown Location' }}</p>
+          <div class="bg-primary w-20 h-40 rounded-t-lg mt-4"></div>
+          <p class="mt-2 text-yellow-500 font-bold">1st Place</p>
+        </div>
+
+        <div *ngIf="topProviders[2]" class="flex flex-col items-center">
+          <a [routerLink]="['/profile', topProviders[2].profile.user.username]">
+            <div class="avatar placeholder">
+              <div class="bg-neutral text-white w-24 h-24 rounded-full flex items-center justify-center">
+                <img *ngIf="topProviders[2].profile.avatar" [src]="environment.mediaUrl + topProviders[2].profile.avatar" alt="Avatar">
+                <span *ngIf="!topProviders[2].profile.avatar" class="text-3xl font-bold">
+              {{ topProviders[2].profile.user.username | slice:0:1 | uppercase }}
+            </span>
+              </div>
+            </div>
+          </a>
+          <h3 class="text-lg font-semibold mt-2">{{ topProviders[2].profile.user.username }}</h3>
+          <p class="text-sm text-gray-500">{{ topProviders[2].profile.location || 'Unknown Location' }}</p>
+          <div class="bg-accent w-20 h-24 rounded-t-lg mt-4"></div>
+          <p class="mt-2 text-gray-500">3rd Place</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="bg-base-100 shadow-xl rounded-lg p-6">
+      <h2 class="text-3xl font-bold text-center mb-8">Recent Bookings</h2>
+      <ul *ngIf="recentBookings.length > 0" class="space-y-4">
+        <li *ngFor="let booking of recentBookings" class="flex items-center space-x-4">
+          <div class="avatar placeholder">
+            <div class="bg-neutral text-white w-12 h-12 rounded-full flex items-center justify-center">
+<!--              <img *ngIf="booking.customer.avatar" [src]="environment.mediaUrl + booking.customer.avatar" alt="{{ booking.customer.user.username }}">-->
+              <span
+                class="text-lg font-bold">
+                <!--                *ngIf="!booking.customer.avatar" -->
+                {{ booking.customer.user.username | slice:0:1 | uppercase }}
+              </span>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold">
+              <a [routerLink]="['/service', booking.service.id]" class="text-primary hover:underline">
+                {{ booking.service.title }}
+              </a>
+            </h3>
+            <p class="text-sm text-gray-500">By: {{ booking.customer.user.username }}</p>
+          </div>
+        </li>
+      </ul>
+      <p *ngIf="recentBookings.length === 0" class="text-gray-500 text-center">No bookings found.</p>
+    </section>
+
+
+    <section class="bg-base-100 shadow-xl rounded-lg p-8 flex flex-col items-center">
+      <h2 class="text-3xl font-bold text-center mb-6">Platform Statistics</h2>
+      <div class="grid grid-cols-3 gap-8 text-center mt-4">
+        <div *ngFor="let stat of homeDataStats" class="text-center">
+          <div class="flex justify-center items-center text-primary mb-4">
+            <i [ngClass]="stat.icon" class="text-5xl"></i>
+          </div>
+          <h3 class="text-4xl font-extrabold">{{ stat.value }}</h3>
+          <p class="text-lg text-gray-600">{{ stat.label }}</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+

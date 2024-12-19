@@ -1,0 +1,36 @@
+<div class="p-4">
+  <h1 class="text-3xl font-bold mb-6">Users</h1>
+
+  <div *ngIf="loading" class="text-xl">Loading...</div>
+  <div *ngIf="error" class="text-xl text-red-500">{{ error }}</div>
+
+  <div *ngIf="users && users.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div *ngFor="let user of users">
+      <div class="card card-compact bg-base-200 shadow-md p-4">
+        <div class="flex items-center gap-4">
+          <div class="avatar">
+            <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+              <span class="text-white text-2xl font-semibold bg-primary w-full h-full flex items-center justify-center">
+                {{ user.username.charAt(0).toUpperCase() }}
+              </span>
+            </div>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold">{{ user.username }}</h2>
+            <p class="text-sm text-gray-500">Email: {{ user.email }}</p>
+            <p class="text-sm text-gray-500">Phone: {{ user.phone }}</p>
+            <p class="text-sm text-gray-500">Provider: {{ user.provider }}</p>
+          </div>
+        </div>
+        <div class="mt-4">
+          <form (ngSubmit)="banUser(user.id)">
+            <button type="submit" class="btn btn-error text-white">Ban User</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div *ngIf="!users.length && !loading" class="text-xl">No users found</div>
+</div>
+

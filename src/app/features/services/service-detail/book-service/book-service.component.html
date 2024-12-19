@@ -1,0 +1,23 @@
+<form (submit)="bookService()">
+  <label for="time" class="block font-semibold">Scheduled Time</label>
+  <input
+    id="time"
+    type="datetime-local"
+    [(ngModel)]="bookingTime"
+    name="scheduled_time"
+    required
+    class="input input-bordered w-full"
+  />
+
+  <label for="details" class="block font-semibold mt-4">Details</label>
+  <textarea
+    id="details"
+    [(ngModel)]="bookingDetails"
+    name="details"
+    rows="4"
+    required
+    class="textarea textarea-bordered w-full"
+  ></textarea>
+
+  <button type="submit" class="btn btn-primary mt-4">Book Now</button>
+</form>

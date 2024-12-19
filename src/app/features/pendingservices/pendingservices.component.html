@@ -1,0 +1,31 @@
+<h1 class="text-3xl mb-6">Pending Services</h1>
+<h1 *ngIf="!services || services.length === 0" class="text-xl">No pending services found</h1>
+  
+<div *ngIf="services" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+
+  <div *ngFor="let service of services" class="card card-compact bg-base-200 bordered shadow-lg">
+    <figure class="relative">
+      <img src="https://via.placeholder.com/640x360.png?text=No+Image" class="rounded-t-lg w-full" alt="Service Image">
+    </figure>
+    <div class="card-body p-4">
+      <h2 class="card-title text-xl font-semibold">{{ service.title }}</h2>
+      <p class="text-base-content text-justify">{{ service.description }}...</p>
+      <p class="text-sm text-gray-500">Submitted by: <strong>{{ service.provider.profile.user.username }}</strong></p>
+      <p class="text-sm text-gray-500">Category: <strong>{{ service.category.name }}</strong></p>
+      <p class="text-sm text-gray-500">Price: $<strong>{{ service.price }}</strong></p>
+      <div class="flex justify-between items-center mt-4">
+        <form (ngSubmit)="approveService(service.id)">
+          <button type="submit" class="btn btn-success text-white">Approve</button>
+        </form>
+        <form (ngSubmit)="rejectService(service.id)">
+          <button type="submit" class="btn btn-error text-white">Reject</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

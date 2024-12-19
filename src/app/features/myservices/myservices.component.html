@@ -1,0 +1,69 @@
+<div class="p-4">
+  <div class="flex justify-between items-center mb-4 gap-4">
+    <form (ngSubmit)="onFilterChange()" class="flex gap-4">
+      <input
+        type="text"
+        [(ngModel)]="searchName"
+        placeholder="Filter by Service Name"
+        class="input input-bordered"
+        name="searchName"
+      />
+      <select [(ngModel)]="filterStatus" class="select select-bordered" name="filterStatus">
+        <option value="">Select Status</option>
+        <option value="bookings_to_approve">Bookings to Approve</option>
+        <option value="bookings_in_progress">Bookings in Progress</option>
+      </select>
+      <button type="submit" class="btn btn-primary text-white">Apply Filters</button>
+    </form>
+
+    <button (click)="openAddServiceModal()" class="btn btn-primary text-white">
+      Add New Service
+    </button>
+  </div>
+
+  <div *ngIf="services.length > 0; else noServices" id="services-container" class="bg-base-200 rounded-lg p-4 flex flex-wrap gap-4 justify-center">
+    <div *ngFor="let service of services" class="card bg-base-100 w-full md:w-[48%] lg:w-[32%] shadow-xl relative">
+      <!-- Service Image -->
+      <div class="w-full h-52 overflow-hidden">
+        <img *ngIf="service.image" [src]="environment.mediaUrl + service.image" [alt]="service.title" class="w-full h-full object-cover" />
+        <div *ngIf="!service.image" class="w-full h-full bg-gray-200 flex items-center justify-center">
+          <span class="text-gray-500">No Image</span>
+        </div>
+      </div>
+
+      <!-- Service Details -->
+      <div class="card-body">
+        <h2 class="card-title">{{ service.title }}</h2>
+        <p>{{ service.description }}</p>
+        <div class="card-actions justify-end">
+          <div class="badge badge-outline">{{ service.category }}</div>
+          <div class="badge badge-outline">{{ service.approval }}</div>
+        </div>
+        <div class="flex justify-center gap-4 mt-4">
+          <button (click)="navigateToPending(service.id)" class="btn btn-sm btn-primary text-white text-xs">
+            Bookings To Approve ({{ service.bookings_to_approve_count }})
+          </button>
+          <button (click)="navigateToInProgress(service.id)" class="btn btn-sm btn-secondary text-white text-xs">
+            In Progress ({{ service.bookings_in_progress_count }})
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noServices>
+    <div class="text-center">
+      <h2 class="text-2xl font-bold text-gray-700">No Services Found</h2>
+      <p>You have not added any services yet.</p>
+    </div>
+  </ng-template>
+
+  <!-- Add Service Modal -->
+  <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-[90%] md:w-[50%] relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-800" (click)="closeAddServiceModal()">✕</button>
+      <h2 class="text-2xl font-bold mb-4">Add New Service</h2>
+      <app-add-service (serviceAdded)="handleServiceAdded()"></app-add-service>
+    </div>
+  </div>
+</div>

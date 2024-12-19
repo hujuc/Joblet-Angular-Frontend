@@ -1,0 +1,25 @@
+.carousel-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  max-width: 300px;
+}
+
+/* Container que organiza os cards */
+.related-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 3 colunas mínimas */
+  gap: 20px; /* Espaçamento entre os cards */
+  justify-items: center; /* Centraliza os cards no grid */
+}
+
+/* Estilização individual do card */
+.related-service-card {
+  max-width: 320px;
+  width: 100%;
+  margin: 0 auto;
+}
+

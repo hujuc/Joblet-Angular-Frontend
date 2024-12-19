@@ -1,0 +1,90 @@
+<div *ngIf="service" class="p-6">
+  <button (click)="goBack()" class="btn btn-primary text-white mb-6">Back to Previous Page</button>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="col-span-1">
+      <img
+        [src]="service.image ? (environment.mediaUrl + service.image) : 'https://via.placeholder.com/640x360.png?text=No+Image'"
+        [alt]="service.title || 'Service Image'"
+        width="640"
+        height="360"
+        class="rounded-lg shadow-lg w-full h-full object-cover"
+      />
+    </div>
+
+    <div class="col-span-2">
+      <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold">{{ service.title }}</h1>
+        <span class="badge badge-primary text-white">{{ service.category.name }}</span>
+      </div>
+
+      <p class="text-base-content text-lg mt-4">{{ service.description }}</p>
+
+      <div class="mt-6 flex justify-between items-center">
+        <div>
+          <p class="text-sm text-gray-500">Posted on: {{ service.created_at | date: 'MMM d, y' }}</p>
+          <p class="text-md text-gray-500 font-bold">Duration: {{ service.duration }}</p>
+        </div>
+        <p class="text-2xl font-bold text-primary">${{ service.price }}</p>
+      </div>
+
+      <div *ngIf="service.provider?.profile" class="flex items-center mt-10">
+        <div class="flex items-center gap-4">
+          <div class="avatar">
+            <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+              <img *ngIf="service.provider?.profile?.avatar" [src]="environment.mediaUrl + service.provider.profile.avatar" [alt]="service.provider.profile.user.username"/>
+              <span *ngIf="!service.provider?.profile?.avatar" class="text-white text-xl font-semibold bg-primary w-full h-full flex items-center justify-center">
+                {{ service.provider.profile.user.username | slice:0:1 | uppercase }}
+              </span>
+            </div>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold">{{ service.provider!.profile.user!.username }}</h2>
+            <div class="text-gray-500 text-sm">
+              <span>Average Rating:</span>
+              <span class="text-sm">{{ avgRating | number: '1.1-1' }}</span>
+            </div>
+            <p class="text-sm text-gray-500">Reviews: {{ reviewsCount }}</p>
+          </div>
+        </div>
+
+        <button *ngIf="isBookable" (click)="openModal()" class="btn btn-primary text-white ml-auto">Book Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="relatedServices.length > 0" class="mt-12">
+  <h3 class="text-2xl font-bold mb-4">Related Services</h3>
+  <div class="related-services-grid">
+    <div *ngFor="let related of relatedServices" class="related-service-card">
+      <div class="card bg-base-100 shadow-lg w-full">
+        <img
+          [src]="related.image ? environment.mediaUrl + related.image : 'https://via.placeholder.com/640x360.png?text=No+Image'"
+          [alt]="related.title || 'Service Image'"
+          class="w-full h-40 object-cover rounded-t-lg"
+        />
+        <div class="p-4">
+          <h2 class="text-xl font-bold">{{ related.title }}</h2>
+          <p class="text-sm text-gray-500">{{ related.description }}</p>
+          <div class="mt-4 flex justify-between items-center">
+            <span class="badge badge-primary text-white">{{ related.category.name }}</span>
+            <button class="btn btn-sm btn-primary text-white" (click)="navigateToService(related.id)">View</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="showBookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
+  <div class="bg-base-200 rounded-lg w-[30rem] max-h-[90vh] p-6 overflow-y-auto relative">
+    <h2 class="text-2xl font-bold mb-4">Book This Service</h2>
+
+    <div>
+      <app-book-service [serviceId]="service?.id || 0"></app-book-service>
+    </div>
+
+    <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-800" (click)="closeModal()">✕</button>
+  </div>
+</div>

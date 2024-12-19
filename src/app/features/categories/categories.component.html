@@ -1,0 +1,44 @@
+<div class="p-4">
+  <h1 class="text-3xl font-bold mb-6">Categories</h1>
+
+  <div class="flex justify-start mb-4">
+    <button onclick="document.getElementById('addCategoryModal').classList.remove('hidden')" class="btn btn-primary text-white">
+      Add New Category
+    </button>
+  </div>
+
+  <div class="bg-base-300 rounded-lg p-4">
+    <h2 class="text-xl font-bold mb-4">Existing Categories</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div *ngFor="let category of categories" class="card card-compact bg-base-200 shadow-md">
+        <h3 class="text-lg font-bold ml-2">{{category.name}}</h3>
+        <p class="text-sm text-gray-500 ml-2">{{category.description}}</p>
+      </div>
+      <div *ngIf="!categories" class="text-gray-500">No categories available.</div>
+    </div>
+  </div>
+
+  <div id="addCategoryModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-base-200 rounded-lg p-6 w-96">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">Add a New Category</h2>
+        <button onclick="document.getElementById('addCategoryModal').classList.add('hidden')" class="btn btn-sm btn-circle">
+          ✕
+        </button>
+      </div>
+      <form (ngSubmit)="addCategory()">
+        <div class="flex flex-col w-full mt-4">
+          <label class="text-black
+          ">Category Name</label>
+          <input type="text" class="input bg-neutral-content rounded-xl w-full" [(ngModel)]="categoryName" [ngModelOptions]="{standalone: true}" placeholder="Enter the category name"/>
+        </div>
+        <div class="flex flex-col w-full mt-4">
+          <label class="text-black
+          ">Category Description</label>
+          <textarea class="textarea bg-neutral-content rounded-xl w-full" [(ngModel)]="categoryDescription" [ngModelOptions]="{standalone: true}" placeholder="Enter the category description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary text-white w-full">Add Category</button>
+      </form>
+    </div>
+  </div>
+</div>

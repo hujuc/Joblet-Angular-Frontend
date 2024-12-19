@@ -1,0 +1,50 @@
+<div class="container mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-6">Wallet</h2>
+
+  <div *ngIf="isLoading" class="text-center">Loading...</div>
+
+  <div *ngIf="!isLoading" class="bg-base-200 rounded-lg p-6 shadow-lg">
+    <p class="text-xl font-semibold mb-4">
+      Current Balance: {{ walletBalance | currency:'EUR' }}
+    </p>
+
+    <div class="form-group mb-4">
+      <label class="font-semibold">Amount:</label>
+      <input
+        type="number"
+        [(ngModel)]="amount"
+        name="amount"
+        class="input input-bordered w-full"
+        placeholder="Enter amount"
+        required
+        min="1"
+      />
+    </div>
+
+    <div class="flex justify-between">
+      <button
+        type="button"
+        class="btn btn-success text-white"
+        (click)="performAction('add')"
+        [disabled]="isSubmitting"
+      >
+        <span *ngIf="isSubmitting && actionType === 'add'" class="loading loading-spinner"></span>
+        Add Money
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-error text-white"
+        (click)="performAction('withdraw')"
+        [disabled]="isSubmitting"
+      >
+        <span *ngIf="isSubmitting && actionType === 'withdraw'" class="loading loading-spinner"></span>
+        Withdraw Money
+      </button>
+    </div>
+
+    <div *ngIf="message" class="mt-4 text-center font-semibold">
+      {{ message }}
+    </div>
+  </div>
+</div>

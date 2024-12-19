@@ -1,0 +1,83 @@
+<div class="container mx-auto p-6">
+  <div *ngIf="isLoading" class="text-center my-6">
+    <p>Loading profile...</p>
+  </div>
+
+  <div *ngIf="error && !isLoading" class="text-center text-red-500">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="profileData && !isLoading" class="bg-base-200 rounded-lg p-6 shadow-lg">
+    <div class="flex items-center gap-4">
+        <div class="w-24 h-24">
+          <img
+            *ngIf="profileData.avatar"
+            [src]="mediaUrl + profileData.avatar"
+            alt="User Avatar"
+            class="rounded-full w-full h-full object-cover"
+          />
+          <div
+            *ngIf="!profileData.avatar"
+            class="bg-gray-500 text-white rounded-full flex items-center justify-center w-full h-full"
+          >
+            {{ profileData.user.username | slice:0:1 | uppercase }}
+          </div>
+        </div>
+
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800">{{ profileData.user.username }}</h1>
+          <p class="text-gray-600">{{ profileData.user.email }}</p>
+        </div>
+
+      <button
+        class="btn btn-primary mt-4 ml-auto text-white"
+        (click)="showEditModal = true"
+        *ngIf="isOwner"
+      >
+        Edit Profile
+      </button>
+    </div>
+
+    <app-edit-profile
+      *ngIf="showEditModal"
+      [isProvider]="profileData.is_provider"
+      [profileData]="profileData"
+      (closeModal)="showEditModal = false"
+      (profileUpdated)="fetchUser(profileData.user.username)"
+    ></app-edit-profile>
+
+    <div class="mt-6">
+      <h2 class="text-xl font-semibold text-gray-800">Personal Information</h2>
+      <ul class="list-none mt-4 text-gray-700">
+        <li><strong>Full Name:</strong> {{ profileData.user.first_name }} {{ profileData.user.last_name }}</li>
+        <li><strong>Phone:</strong> {{ profileData.phone || 'Not Provided' }}</li>
+        <li><strong>Location:</strong> {{ profileData.location || 'Not Provided' }}</li>
+      </ul>
+    </div>
+
+    <div class="mt-6" *ngIf="profileData.is_provider">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-2xl font-semibold">User Reviews</h3>
+        <button
+          class="btn btn-primary text-white"
+          (click)="showAddReviewModal = true"
+          *ngIf="profileData && !isOwner"
+        >
+          Add Review
+        </button>
+      </div>
+
+      <app-review-list
+        *ngIf="profileData?.user?.id !== undefined"
+        [providerId]="profileData.user.id"
+      ></app-review-list>
+
+
+      <app-add-review
+        *ngIf="showAddReviewModal && profileData?.user?.id"
+        [providerId]="profileData!.user!.id"
+        (reviewAdded)="handleReviewAdded()"
+      ></app-add-review>
+    </div>
+  </div>
+</div>

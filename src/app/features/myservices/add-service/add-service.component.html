@@ -1,0 +1,39 @@
+<div>
+  <form (ngSubmit)="addService()">
+    <div class="mb-4">
+      <label for="title" class="block text-sm font-medium">Service Title</label>
+      <input type="text" id="title" [(ngModel)]="formData.title" name="title" class="input input-bordered w-full" required />
+    </div>
+    <div class="mb-4">
+      <label for="description" class="block text-sm font-medium">Description</label>
+      <textarea
+        id="description"
+        [(ngModel)]="formData.description"
+        name="description"
+        class="textarea textarea-bordered w-full"
+        required
+      ></textarea>
+    </div>
+    <div class="mb-4">
+      <label for="category_id" class="block text-sm font-medium">Category</label>
+      <select id="category_id" [(ngModel)]="formData.category_id" name="category_id" class="select select-bordered w-full" required>
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label for="price" class="block text-sm font-medium">Price</label>
+      <input type="number" id="price" [(ngModel)]="formData.price" name="price" step="0.01" class="input input-bordered w-full" required />
+    </div>
+    <div class="mb-4">
+      <label for="duration" class="block text-sm font-medium">Duration (in minutes)</label>
+      <input type="number" id="duration" [(ngModel)]="formData.duration" name="duration" class="input input-bordered w-full" required />
+    </div>
+    <div class="mb-4">
+      <label for="image" class="block text-sm font-medium">Image</label>
+      <input type="file" id="image" (change)="onImageChange($event)" class="file-input file-input-bordered w-full" />
+    </div>
+    <div class="flex justify-end">
+      <button type="submit" class="btn btn-primary text-white">Add Service</button>
+    </div>
+  </form>
+</div>

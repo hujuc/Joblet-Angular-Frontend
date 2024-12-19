@@ -1,0 +1,59 @@
+<div class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
+  <div class="bg-base-200 rounded-lg w-[30rem] max-h-[90vh] p-6 overflow-y-auto relative">
+    <h2 class="text-2xl font-bold mb-4">Edit Profile</h2>
+
+    <form [formGroup]="profileForm" (ngSubmit)="submitForm()" enctype="multipart/form-data">
+      <div class="form-control mb-4">
+        <label class="label font-semibold">Profile Image</label>
+        <input type="file" (change)="onFileSelected($event)" class="file-input file-input-bordered w-full" />
+      </div>
+
+      <div class="form-control mb-4">
+        <label class="label font-semibold">Phone</label>
+        <input formControlName="phone" type="text" class="input input-bordered w-full" />
+      </div>
+
+      <div class="form-control mb-4">
+        <label class="label font-semibold">Location</label>
+        <input formControlName="location" type="text" class="input input-bordered w-full" />
+      </div>
+
+      <div *ngIf="isProvider">
+        <div class="form-control mb-4">
+          <label class="label font-semibold">About</label>
+          <textarea formControlName="about" class="textarea textarea-bordered w-full"></textarea>
+        </div>
+
+        <div class="form-control mb-4">
+          <label class="label font-semibold">Contact Email</label>
+          <input formControlName="contact_email" type="email" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control mb-4">
+          <label class="label font-semibold">LinkedIn</label>
+          <input formControlName="linkedin" type="text" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control mb-4">
+          <label class="label font-semibold">Twitter</label>
+          <input formControlName="twitter" type="text" class="input input-bordered w-full" />
+        </div>
+
+        <div class="form-control mb-4">
+          <label class="label font-semibold">Facebook</label>
+          <input formControlName="facebook" type="text" class="input input-bordered w-full" />
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="loading loading-spinner"></span>
+          Save Changes
+        </button>
+      </div>
+    </form>
+
+    <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-800" (click)="close()">✕</button>
+  </div>
+</div>

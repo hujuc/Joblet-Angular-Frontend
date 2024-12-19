@@ -1,0 +1,55 @@
+<div *ngIf="isLoading" class="text-center my-6">Loading chat...</div>
+
+<div *ngIf="!isLoading">
+  <h2 *ngIf="messages.length > 0" class="text-2xl font-bold my-4">
+    Chat for Booking:
+    {{ messages[0].chat.booking.service.title || 'Service Not Available' }}
+  </h2>
+
+  <div class="bg-gray-100 p-4 rounded-lg max-h-96 overflow-y-auto chat-messages">
+    <div *ngFor="let message of messages" class="mb-4" [ngClass]="{'text-right': message.sender.id === userId, 'text-left': message.sender.id !== userId}">
+      <p class="font-semibold text-primary">
+        {{ message.sender.id === userId ? 'You' : message.sender.user.username }}
+      </p>
+      <div class="text-sm inline-block rounded-lg p-2 shadow-md" [ngClass]="{'bg-primary text-white': message.sender.id === userId, 'bg-gray-200': message.sender.id !== userId}">
+        <p class="text-sm font-normal">
+          {{ message.content }}
+        </p>
+        <a
+          *ngIf="message.file"
+          [href]="environment.mediaUrl + message.file"
+          target="_blank"
+          [ngClass]="{'text-white': message.sender.id === userId, 'text-primary': message.sender.id !== userId}"
+          class="hover:underline inline-flex items-center"
+        >
+          <i class="fas fa-paperclip mr-2"></i> Attached File
+        </a>
+      </div>
+
+      <p class="text-xs text-gray-500">
+        {{ message.timestamp | date: 'M d, Y H:mm' }}
+      </p>
+
+    </div>
+
+    <div *ngIf="messages.length === 0" class="text-center text-gray-500">
+      No messages yet. Start the conversation!
+    </div>
+  </div>
+
+  <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="mt-4">
+    <div class="form-control mb-4">
+      <label class="label font-semibold">Message</label>
+      <textarea formControlName="content" class="textarea textarea-bordered w-full" placeholder="Type your message here..." rows="3" required></textarea>
+    </div>
+    <div class="form-control mb-4">
+      <label class="label font-semibold">Attach File</label>
+      <input type="file" (change)="handleFileInput($event)" class="file-input file-input-bordered w-full" />
+    </div>
+    <div class="flex justify-end">
+      <button type="submit" class="btn btn-primary text-white" [disabled]="messageForm.invalid">
+        Send
+      </button>
+    </div>
+  </form>
+</div>

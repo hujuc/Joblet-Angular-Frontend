@@ -1,0 +1,9 @@
+.menu details ul {
+  position: absolute;
+  z-index: 1000;
+}
+
+.dropdowndoprofile {
+  position: absolute;
+  z-index: 1000;
+}
