@@ -20,7 +20,6 @@ import { environment } from 'environments/environment';
 export class NavbarComponent implements OnInit, OnDestroy {
   categories: Category[] = [];
   isLoggedIn = false;
-  isAdmin = false;
   isProvider = false;
   hideNavbar = false;
   profile: Profile | null = null;
@@ -44,6 +43,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.fetchUnreadNotificationsCount();
   }
 
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
   // Handle authentication state changes
   private handleAuthenticationChanges(): void {
     const authSub = this.authService.getAuthStatus().subscribe((isLoggedIn) => {
@@ -60,7 +63,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // Reset user-related state on logout or unauthenticated state
   private resetUserState(): void {
     this.profile = null;
-    this.isAdmin = false;
     this.isProvider = false;
   }
 
@@ -113,12 +115,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   // Fetch unread notification count
   private fetchUnreadNotificationsCount(): void {
-    this.notificationService.getUnreadCount().subscribe({
-      next: (count) => {
-        this.unreadNotificationsCount = count;
-      },
-      error: (err) => console.error('Error fetching unread notifications count:', err),
-    });
+    if (!this.isAdmin) {
+      this.notificationService.getUnreadCount().subscribe({
+        next: (count) => {
+          this.unreadNotificationsCount = count;
+        },
+        error: (err) => console.error('Error fetching unread notifications count:', err),
+      });
+    }
   }
 
   // Logout user
